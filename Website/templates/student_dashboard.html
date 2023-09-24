@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+
+
+{%block content%}
+
+<div class="row mt-3">
+
+    <div class="col-sm-4 justify-content-left">
+
+      <div class="card" style="width: 18rem;">
+
+          <img src = "{{url_for('static', filename = 'image_00.webp')}}"
+                       class="card-img-top w-100 rounded-2 shadow-1"/>
+
+              <div class="card-body">
+                <h5 class="card-title">Student : {{user.username}}</h5>
+
+                <ul class="list-group list-group-flush">
+
+                    {% for each_module in all_module  %}
+                        <li class="list-group-item">Module Taking : {{each_module.module.module_name}}</li>
+                    {% endfor  %}
+
+               </ul>
+
+              </div>
+
+      </div>
+    </div>
+
+    <div class="col-sm-8 justify-content-right">
+
+        <div class="card">
+
+          <div class="card-header">
+            <ul class="nav nav-tabs card-header-tabs">
+
+              <li class="nav-item">
+                <a class="nav-link active" id = "nav_student"  href="#">Notification</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link "  id = "nav_grade" href="#">View Grade</a>
+              </li>
+
+              <li class="nav-item">
+                <a class="nav-link" id = "nav_quit" > Quit </a>
+              </li>
+
+            </ul>
+          </div>
+
+          <div class="card-body" id = "student_notification">
+
+            <h5 class="card-title">Notification</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+
+          </div>
+
+          <div class="card-body" id = "view_grade">
+
+            <h5 class="card-title">View Grade</h5>
+            </div>
+                <table class="table table-hover">
+                  <tr class="table-secondary">
+                      <th> Module Code </th>
+                      <th> Module Name </th>
+                      <th> Semester</th>
+                      <th> Earned Credit </th>
+                      <th> Gpa </th> 
+                  </tr>
+              
+                  {% for config in all_module %}
+                      <tr>
+                          <td>{{ config.module.module_code }}</td>
+                          <td>{{ config.module.module_name }}</td>
+                          <td>{{ config.module.semester }}</td>
+                          <td>
+                              {% if config.earn_credit is none %}
+                                  Pending
+                              {% else %}
+                                  {{ config.earn_credit }}
+                              {% endif %}
+                          </td>
+                          <td>
+                              {% if config.gpa is none %}
+                                  GPA Not Available
+                              {% else %}
+                                  {{ config.gpa }}
+                              {% endif %}
+                          </td>
+                      </tr>
+                  {% endfor %}
+              </table>
+              
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#" class="btn btn-primary">Go somewhere</a>
+
+          </div>
+
+          <div class="card-body" id = "quit">
+
+
+                <div class="col-sm-4">
+
+                     <img src = "{{url_for('static', filename = 'image_01.jpeg')}}"
+                       class="w-100 rounded-2 shadow-1"/>
+                </div>
+
+                <div class="col-sm-8">
+
+                    i quit
+
+
+
+                </div>
+
+              </div>
+
+          </div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+{% endblock %}

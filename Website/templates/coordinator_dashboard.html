@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+
+ {%block content%}
+
+<img src = "{{url_for('static', filename = 'background_01.jpeg')}}" class="w-100  rounded-2 shadow-1"/>
+
+<div class="card-img-overlay text-center" style="margin-top:7%;">
+
+  <div class="card-header">
+
+    <ul class="nav nav-tabs card-header-tabs">
+
+      <li class="nav-item">
+        <a class="nav-link active" id = "nav_notification"  href="javascript:;">Notification</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link " id = "nav_all_student"  href="javascript:;">View All Student</a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link " id = "nav_all_lecturer"  href="javascript:;">View All Lecturer</a>
+      </li>
+
+
+      <li class="nav-item">
+        <a class="nav-link " id = "nav_all_module"  href="javascript:;">View Assigned Modules</a> <!-- e -->
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="card-body" id = "coordinator_notification">
+
+    <h5 class="card-title">Notifications</h5>
+
+    {% if notifications %}
+        <ul class="list-group">
+            {% for notification in notifications %}
+                <li class="list-group-item">{{ notification.message }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No notifications available</p>
+    {% endif %}
+
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+  </div>
+
+    <!--    View All Student -->
+  <div class="card-body" id = "view_all_student">
+
+
+              <div class="mt-3">
+                       <div class="row justify-content-center">
+
+                            <div class="col-sm-10" >
+
+                                <select class="form-select form-select-md mb-3"  id = "module_assign_status">
+
+                                        <option value="">Please choose student type </option>
+                                        <option value="assign_student">Module Assign Student</option>
+                                        <option value="all_student">All Student</option>
+
+                              </select>
+
+                            </div>
+
+                       </div>
+              </div>
+
+
+              <table class="table table-hover" id = "content_assign_student">
+                    <tr class="table-secondary">
+
+                        <th> Student ID </th>
+                        <th> Username </th>
+                        <th> Email </th>
+                        <th> Module Code</th>
+                        <th> Credit </th>
+                        <th> Lecturer Name</th>
+
+                    </tr>
+
+              {% for each in config %}
+
+                {% if each.student_id == each.user.id %}
+                    <tr>
+
+                        <td>{{each.user.id}}</td>
+                        <td>{{each.user.username}}</td>
+                        <td>{{each.user.email}}</td>
+                        <td>{{each.user.credit}}</td>
+                        <td>{{each.module_code}}</td>
+                        <td>{{each.lecturer_id}}</td>
+
+                    </tr>
+
+                {%endif%}
+              {%endfor%}
+
+              </table>
+
+              <table class="table table-hover" id = "content_all_student">
+
+                    <tr class="table-secondary">
+
+                        <th> Student ID </th>
+                        <th> Username </th>
+                        <th> Email </th>
+                        <th> Credit </th>
+
+                    </tr>
+                      {% for each in all_user %}
+
+                        {% if each.userrole == 'student' %}
+                            <tr>
+
+                                <td>{{each.id}}</td>
+                                <td>{{each.username}}</td>
+                                <td>{{each.email}}</td>
+                                <td>{{each.credit}}</td>
+                            </tr>
+                {%endif%}
+              {%endfor%}
+
+              </table>
+
+
+          </div>
+
+  <!--   End View All Student -->
+
+
+    <!--    View All Lecturer -->
+  <div class="card-body" id = "view_all_lecturer">
+
+       <table class="table table-hover" >
+
+                    <tr class="table-secondary">
+                        <th> Lecturer ID </th>
+                        <th> Username </th>
+                        <th> Email </th>
+                    </tr>
+
+                  {% for each in all_user %}
+
+                    {% if each.userrole == 'lecturer' %}
+                        <tr>
+                            <td>{{each.id}}</td>
+                            <td>{{each.username}}</td>
+                            <td>{{each.email}}</td>
+
+                        </tr>
+                    {%endif%}
+                  {%endfor%}
+
+              </table>
+
+  </div>
+  <!--   End View All Lecturer -->
+
+  
+  <div class="card-body" id="view_assigned_module">
+    <table class="table table-hover">
+        <tr class="table-secondary">
+            <th>Module Code</th>
+            <th>Module Name</th>
+            <th>Module Semester</th>
+            <th>Lecturer Name</th>
+            <th>Vetted Status</th>
+            <th>Notification</th>
+            <th>Confirm Grades</th>
+        </tr>
+
+        {% for module in modules %}
+            <tr>
+                <td>{{ module.module_code }}</td>
+                <td>{{ module.module_name }}</td>
+                <td>{{ module.semester }}</td>
+                <td>{{ module.lecturer_name }}</td>
+                <td>
+                    {% if module.module_status %}
+                        Vetted
+                    {% else %}
+                        Not Vetted
+                    {% endif %}
+                </td>
+                <td>
+                    {% for notification in notifications %}
+                        {% if notification.s_userid == module.lecturer_id and notification.module_code == module.module_code %}
+                            Notification Received
+                        {% else %}
+                            No Notification
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                
+                <td>
+                    <a href="{{ url_for('views.vet_module', module_code=module.module_code) }}" class="btn btn-primary">Vet Module</a>
+                </td>
+            </tr>
+        {% endfor %}
+
+    </table>
+</div>
+
+
+</div>
+
+
+
+{% endblock %}

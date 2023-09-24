@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+
+{% block content %}
+<div class = "card-img-overlay text-center" style = "margin-top: 7%;">
+    <div class = "card-header">
+        <ul class = "nav nav-tabs card-header-tabs">
+            <li class = "nav-item">
+                <a class = "nav-link active" id = "nav_back" href = "/lecturer_dashboard">Back</a>
+            </li>
+            <li class = "nav-item">
+                <a class = "nav-link" id = "nav_grading" href = "javascript:;">{{module_code}} </a>
+            </li>
+
+        </ul>
+    </div>
+    <div class = "card-body" id = "nav_grading">
+        <form action="{{ url_for('views.notify_coordinator', module_code=module_code) }}" method="post">
+            <input type="hidden" name="message" value="The grades for {{ module.module_name }} taught by {{ current_user.username }} is ready for vetting.">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mt-3 ">Notify Coordinator</button>
+            </div>
+        </form>
+        
+        <form action="{{ url_for('views.grade_module', module_code=module_code) }}" method="post">
+            <div class="d-flex justify-content-end">
+                <button type="submit" class="btn btn-primary mt-3 ">Submit Grades</button>
+            </div>
+            <table class="table table-hover">
+                <tr class="table-secondary">
+                    <th> Student ID </th>
+                    <th> Username </th>
+                    <th> Module Code </th>
+                    <th> Module Name </th>
+                    <th> Earned Credit </th>
+                    <th> Grade </th>
+                    <th> Enter Grade </th>
+
+                </tr>
+                {%for config in students%}
+
+                    <tr>
+
+                        <td>{{config.user.id}}</td>
+                        <td>{{config.user.username}}</td>
+                        <td>{{config.module.module_code}}</td>
+                        <td>{{config.module.module_name}}</td>
+                        <td>{% if config.earn_credit is none%}
+                                Pending Admin Approval
+                            {% else %}
+                                {{config.earn_credit}}
+                            {% endif %}
+                        </td>
+                        <td>{{config.mark}}</td>
+
+                        <td>
+                            {% if module_status == false%}
+
+                            <input type="number" placeholder="enter the student grade" min="0" name="grade_{{config.user.id}}" class="form-control" />
+                
+
+                            {% else %}
+
+                            <input type="number" disabled placeholder="Coordinator locked" min="0" name="grade_{{config.user.id}}" class="form-control" />
+
+                        
+
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function updateTabName(newName){
+        document.getElementById("nav_grading").textContent = newName;
+    }
+</script>
+
+
+
+{% endblock %}

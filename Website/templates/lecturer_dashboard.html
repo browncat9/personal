@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<img src="{{ url_for('static', filename='background_03.webp') }}" class="w-75 rounded-2 shadow-1" />
+
+<div class="card-img-overlay text-center" style="margin-top:7%;">
+
+  <div class="card-header">
+
+    <ul class="nav nav-tabs card-header-tabs">
+
+      <li class="nav-item">
+        <a class="nav-link active" id="nav_notification" href="javascript:;">Notification</a>
+      </li>
+
+      <li class="nav-item">
+        <a class="nav-link" id="nav_grading" href="javascript:;">Grading</a>
+      </li>
+
+    </ul>
+  </div>
+
+  <div class="card-body" id="notification">
+
+    <h5 class="card-title">Notification</h5>
+    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+
+  </div>
+
+  
+
+  <div class="card-body" id="grading" style="display:none;">
+
+    <table class="table table-hover">
+      <tr class="table-secondary">
+        <th> Module Code </th>
+        <th> Module Name </th>
+        <th> Module Status </th>
+        <th> Grade Module </th>
+      </tr>
+      {% for config in all_config %}
+        <tr>
+          <td>{{ config.module.module_code }}</td>
+          <td>{{ config.module.module_name }}</td>
+          <td>{{ "Locked" if config.module.module_status else "Not Locked" }}</td>
+          <td>
+            <a href="{{ url_for('views.grade_module', module_code=config.module.module_code) }}" class="btn btn-primary">Grade Module</a>
+          </td>
+        </tr>
+      {% endfor %}
+    </table>
+
+  </div>
+
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.getElementById("nav_notification").addEventListener("click", function() {
+      document.getElementById("grading").style.display = "none";
+      document.getElementById("notification").style.display = "block";
+    });
+
+    document.getElementById("nav_grading").addEventListener("click", function() {
+      document.getElementById("grading").style.display = "block";
+      document.getElementById("notification").style.display = "none";
+    });
+  });
+</script>
+
+{% endblock %}
